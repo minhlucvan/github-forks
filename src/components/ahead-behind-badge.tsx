@@ -1,7 +1,45 @@
-export function AheadBehindBadge() {
+import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
+import type { GitHubComparison } from "@/lib/github-types"
+
+interface AheadBehindBadgeProps {
+  comparison?: GitHubComparison | null
+  isLoading?: boolean
+}
+
+export function AheadBehindBadge({ comparison, isLoading }: AheadBehindBadgeProps) {
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-1.5">
+        <Skeleton className="h-5 w-12 rounded-full" />
+        <Skeleton className="h-5 w-12 rounded-full" />
+      </div>
+    )
+  }
+
+  if (!comparison) {
+    return <span className="text-xs text-muted-foreground">-</span>
+  }
+
+  if (comparison.status === "identical") {
+    return <Badge variant="identical">identical</Badge>
+  }
+
   return (
-    <span>
-      {/* TODO: Ahead/behind pill badges */}
-    </span>
+    <div className="flex items-center gap-1.5">
+      {comparison.ahead_by > 0 && (
+        <Badge variant="ahead" className="tabular-nums">
+          +{comparison.ahead_by}
+        </Badge>
+      )}
+      {comparison.behind_by > 0 && (
+        <Badge variant="behind" className="tabular-nums">
+          -{comparison.behind_by}
+        </Badge>
+      )}
+      {comparison.ahead_by === 0 && comparison.behind_by === 0 && (
+        <Badge variant="identical">identical</Badge>
+      )}
+    </div>
   )
 }

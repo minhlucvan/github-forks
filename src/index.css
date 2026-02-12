@@ -12,12 +12,16 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Core surfaces */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
+  /* Actions */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -27,14 +31,20 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+
+  /* Boundaries */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Charts (shadcn default) */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  /* Sidebar (shadcn default — unused but referenced by primitives) */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -43,25 +53,47 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Fork divergence signals */
   --color-ahead: var(--ahead);
   --color-ahead-foreground: var(--ahead-foreground);
   --color-behind: var(--behind);
   --color-behind-foreground: var(--behind-foreground);
+
+  /* Health score tiers */
   --color-score-thriving: var(--score-thriving);
+  --color-score-thriving-foreground: var(--score-thriving-foreground);
   --color-score-active: var(--score-active);
+  --color-score-active-foreground: var(--score-active-foreground);
   --color-score-moderate: var(--score-moderate);
+  --color-score-moderate-foreground: var(--score-moderate-foreground);
   --color-score-low: var(--score-low);
+  --color-score-low-foreground: var(--score-low-foreground);
   --color-score-inactive: var(--score-inactive);
+  --color-score-inactive-foreground: var(--score-inactive-foreground);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE
+   Foundation: Achromatic oklch — pure white/gray.
+   Color is reserved for meaning (ahead/behind/health).
+   Cards distinguished by border + shadow-sm (not surface color).
+   ═══════════════════════════════════════════════════════════════ */
 
 :root {
   --radius: 0.625rem;
+
+  /* ── Surface elevation ──
+     L0 canvas = L1 card = L2 popover (all white).
+     Hierarchy comes from border + shadow, not color. */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
+
+  /* ── Actions ── */
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -71,14 +103,20 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
+
+  /* ── Boundaries ── */
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
+  /* ── Charts (shadcn default) ── */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
+
+  /* ── Sidebar (shadcn default) ── */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -88,63 +126,99 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Fork divergence signals */
+  /* ── Fork divergence signals ──
+     Green for "real work happened," amber for "drifting from parent." */
   --ahead: oklch(0.65 0.19 160);
   --ahead-foreground: oklch(1 0 0);
   --behind: oklch(0.70 0.15 65);
   --behind-foreground: oklch(0.25 0.05 60);
 
-  /* Health score tiers */
-  --score-thriving: oklch(0.62 0.19 255);
-  --score-active: oklch(0.65 0.19 160);
+  /* ── Health score tiers ──
+     Five tiers from thriving (blue) to inactive (gray).
+     Foreground chosen for WCAG AA contrast on each background. */
+  --score-thriving: oklch(0.52 0.19 255);
+  --score-thriving-foreground: oklch(1 0 0);
+  --score-active: oklch(0.55 0.17 160);
+  --score-active-foreground: oklch(1 0 0);
   --score-moderate: oklch(0.70 0.15 65);
-  --score-low: oklch(0.65 0.20 35);
+  --score-moderate-foreground: oklch(0.25 0.05 60);
+  --score-low: oklch(0.58 0.20 35);
+  --score-low-foreground: oklch(1 0 0);
   --score-inactive: oklch(0.55 0 0);
+  --score-inactive-foreground: oklch(1 0 0);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE — GitHub-inspired cool neutrals
+   Hue 264 (cool blue), chroma 0.005–0.008 (barely tinted).
+   Recognition, not decoration — our users live on GitHub.
+   Elevation via surface lightness shifts (shadows invisible here).
+   ═══════════════════════════════════════════════════════════════ */
+
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  /* ── Surface elevation ──
+     L0 canvas → L1 card → L2 popover: each step +0.04 lightness.
+     Whisper-quiet shifts you feel rather than see. */
+  --background: oklch(0.13 0.005 264);          /* GitHub #0d1117 */
+  --foreground: oklch(0.87 0.008 264);          /* GitHub #c9d1d9 */
+  --card: oklch(0.17 0.006 264);                /* GitHub #161b22 */
+  --card-foreground: oklch(0.87 0.008 264);
+  --popover: oklch(0.20 0.006 264);             /* GitHub #1c2128 */
+  --popover-foreground: oklch(0.87 0.008 264);
+
+  /* ── Actions ── */
+  --primary: oklch(0.87 0.008 264);
+  --primary-foreground: oklch(0.13 0.005 264);
+  --secondary: oklch(0.22 0.006 264);           /* GitHub #21262d */
+  --secondary-foreground: oklch(0.87 0.008 264);
+  --muted: oklch(0.22 0.006 264);
+  --muted-foreground: oklch(0.64 0.008 264);    /* GitHub #8b949e */
+  --accent: oklch(0.22 0.006 264);
+  --accent-foreground: oklch(0.87 0.008 264);
+  --destructive: oklch(0.65 0.20 25);
+
+  /* ── Boundaries ──
+     Alpha borders blend with any surface level. */
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --ring: oklch(0.50 0.008 264);
 
-  --ahead: oklch(0.65 0.20 155);
+  /* ── Charts ── */
+  --chart-1: oklch(0.55 0.20 255);
+  --chart-2: oklch(0.60 0.15 160);
+  --chart-3: oklch(0.65 0.13 60);
+  --chart-4: oklch(0.60 0.20 300);
+  --chart-5: oklch(0.60 0.22 20);
+
+  /* ── Sidebar ── */
+  --sidebar: oklch(0.17 0.006 264);
+  --sidebar-foreground: oklch(0.87 0.008 264);
+  --sidebar-primary: oklch(0.55 0.20 255);
+  --sidebar-primary-foreground: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.22 0.006 264);
+  --sidebar-accent-foreground: oklch(0.87 0.008 264);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.50 0.008 264);
+
+  /* ── Fork divergence signals ── */
+  --ahead: oklch(0.65 0.17 155);
   --ahead-foreground: oklch(0.98 0 0);
-  --behind: oklch(0.65 0.15 60);
+  --behind: oklch(0.65 0.13 60);
   --behind-foreground: oklch(0.98 0 0);
 
-  --score-thriving: oklch(0.65 0.20 260);
-  --score-active: oklch(0.65 0.20 155);
-  --score-moderate: oklch(0.65 0.15 60);
-  --score-low: oklch(0.65 0.20 40);
+  /* ── Health score tiers ──
+     Slightly desaturated vs. light mode — saturated colors
+     feel harsher against dark backgrounds. */
+  --score-thriving: oklch(0.60 0.17 260);
+  --score-thriving-foreground: oklch(0.98 0 0);
+  --score-active: oklch(0.62 0.15 155);
+  --score-active-foreground: oklch(0.98 0 0);
+  --score-moderate: oklch(0.62 0.13 60);
+  --score-moderate-foreground: oklch(0.98 0 0);
+  --score-low: oklch(0.62 0.17 40);
+  --score-low-foreground: oklch(0.98 0 0);
   --score-inactive: oklch(0.40 0 0);
+  --score-inactive-foreground: oklch(0.82 0 0);
 }
 
 @layer base {

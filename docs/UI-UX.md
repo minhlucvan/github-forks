@@ -569,57 +569,65 @@ EXPANDED:
 
 ## 6. Visual Design System
 
+> **Canonical token values live in `.interface-design/system.md` and `src/index.css`.**
+> This section documents the rationale. See system.md for exact oklch values.
+
 ### 6.1 Color Palette
 
-Colors carry semantic meaning. We use color sparingly — only where it communicates data.
+**Color model: oklch** — perceptually uniform lightness across hues. This means health score tiers at the same lightness value produce consistent contrast against white text, regardless of hue (blue, green, amber, orange).
 
-**Light theme** (default):
+Colors carry semantic meaning. We use color sparingly — only where it communicates data. The foundation is achromatic (zero chroma) — color is reserved for ahead/behind signals and health score tiers.
 
-| Token | Value | Semantic meaning |
+**Light theme** (achromatic foundation):
+
+| Token | oklch | Semantic meaning |
 |-------|-------|-----------------|
-| `bg-page` | `#ffffff` | Page canvas |
-| `bg-card` | `#f9fafb` | Elevated surfaces (parent card, filter panel) |
-| `bg-row-alt` | `#f9fafb` | Alternating table rows |
-| `bg-row-hover` | `#f3f4f6` | Hovered row |
-| `text-primary` | `#111827` | Body text, fork names, numbers |
-| `text-secondary` | `#6b7280` | Supporting text, captions, "last push" |
-| `text-muted` | `#9ca3af` | Placeholder text, disabled state |
-| `border` | `#e5e7eb` | Table lines, card borders, dividers |
-| `accent` | `#2563eb` | Links, primary button, interactive elements |
-| `accent-hover` | `#1d4ed8` | Hover state for accent |
-| `ahead` | `#059669` | Ahead commit count, "active" health, positive signals |
-| `behind` | `#d97706` | Behind commit count, "moderate" health, drift warning |
-| `danger` | `#dc2626` | Errors, "inactive" health, rate limit critical |
-| `score-thriving` | `#2563eb` | Health 80-100 |
-| `score-active` | `#059669` | Health 60-79 |
-| `score-moderate` | `#d97706` | Health 40-59 |
-| `score-low` | `#ea580c` | Health 20-39 |
-| `score-inactive` | `#9ca3af` | Health 0-19 |
+| `--background` | `oklch(1 0 0)` | Page canvas — pure white |
+| `--card` | `oklch(1 0 0)` | Elevated surfaces — same as canvas. Cards distinguished by border + shadow-sm, not surface color |
+| `--foreground` | `oklch(0.145 0 0)` | Body text, fork names, numbers |
+| `--muted-foreground` | `oklch(0.556 0 0)` | Supporting text, captions, "last push" |
+| `--primary` | `oklch(0.205 0 0)` | Primary buttons, interactive elements — near-black, not blue. Color is reserved for data meaning |
+| `--secondary` | `oklch(0.97 0 0)` | Secondary surfaces, hover backgrounds |
+| `--border` | `oklch(0.922 0 0)` | Table lines, card borders, dividers |
+| `--destructive` | `oklch(0.577 0.245 27.325)` | Errors, rate limit critical |
+| `--ahead` | `oklch(0.65 0.19 160)` | Ahead commit count, positive signals — green |
+| `--behind` | `oklch(0.70 0.15 65)` | Behind commit count, drift warning — amber |
+| `--score-thriving` | `oklch(0.52 0.19 255)` | Health 80-100 — blue |
+| `--score-active` | `oklch(0.55 0.17 160)` | Health 60-79 — green |
+| `--score-moderate` | `oklch(0.70 0.15 65)` | Health 40-59 — amber (dark foreground text for contrast) |
+| `--score-low` | `oklch(0.58 0.20 35)` | Health 20-39 — orange |
+| `--score-inactive` | `oklch(0.55 0 0)` | Health 0-19 — gray |
 
-**Dark theme** (GitHub-inspired):
+Row hover uses `hover:bg-muted/50` (shadcn default). No alternating row colors — the table is dense enough without visual noise.
 
-| Token | Value | Semantic meaning |
+**Dark theme** (GitHub-inspired cool neutrals):
+
+The dark palette uses GitHub's color system with a subtle cool blue tint (oklch hue 264, chroma 0.005–0.008). Elevation is communicated through surface lightness shifts (+0.04L per level) because shadows are invisible on dark backgrounds.
+
+| Token | oklch | Semantic meaning |
 |-------|-------|-----------------|
-| `bg-page` | `#0d1117` | Page canvas |
-| `bg-card` | `#161b22` | Elevated surfaces |
-| `bg-row-alt` | `#161b22` | Alternating table rows |
-| `bg-row-hover` | `#1c2128` | Hovered row |
-| `text-primary` | `#f0f6fc` | Body text |
-| `text-secondary` | `#8b949e` | Supporting text |
-| `text-muted` | `#484f58` | Placeholder, disabled |
-| `border` | `#30363d` | Borders, dividers |
-| `accent` | `#58a6ff` | Links, interactive |
-| `accent-hover` | `#79c0ff` | Hover state |
-| `ahead` | `#3fb950` | Ahead commits |
-| `behind` | `#d29922` | Behind commits |
-| `danger` | `#f85149` | Errors, critical |
-| `score-thriving` | `#58a6ff` | Health 80-100 |
-| `score-active` | `#3fb950` | Health 60-79 |
-| `score-moderate` | `#d29922` | Health 40-59 |
-| `score-low` | `#f0883e` | Health 20-39 |
-| `score-inactive` | `#484f58` | Health 0-19 |
+| `--background` | `oklch(0.13 0.005 264)` | Page canvas — GitHub #0d1117 |
+| `--card` | `oklch(0.17 0.006 264)` | Elevated surfaces — GitHub #161b22 |
+| `--popover` | `oklch(0.20 0.006 264)` | Popovers/dropdowns — GitHub #1c2128 |
+| `--foreground` | `oklch(0.87 0.008 264)` | Body text — GitHub #c9d1d9 |
+| `--muted-foreground` | `oklch(0.64 0.008 264)` | Supporting text — GitHub #8b949e |
+| `--primary` | `oklch(0.87 0.008 264)` | Primary buttons — inverted for dark mode |
+| `--secondary` | `oklch(0.22 0.006 264)` | Secondary surfaces — GitHub #21262d |
+| `--border` | `oklch(1 0 0 / 10%)` | Borders — alpha blends with any surface level |
+| `--destructive` | `oklch(0.65 0.20 25)` | Errors, critical |
+| `--ahead` | `oklch(0.65 0.17 155)` | Ahead commits — slightly desaturated |
+| `--behind` | `oklch(0.65 0.13 60)` | Behind commits — slightly desaturated |
+| `--score-thriving` | `oklch(0.60 0.17 260)` | Health 80-100 — desaturated ~15% vs light |
+| `--score-active` | `oklch(0.62 0.15 155)` | Health 60-79 |
+| `--score-moderate` | `oklch(0.62 0.13 60)` | Health 40-59 — near-white foreground (darker bg makes white text readable) |
+| `--score-low` | `oklch(0.62 0.17 40)` | Health 20-39 |
+| `--score-inactive` | `oklch(0.40 0 0)` | Health 0-19 |
 
-**Why GitHub's dark palette:** Our users live on GitHub. Matching their dark-mode expectations reduces cognitive friction.
+Every health score tier has a dedicated `--score-*-foreground` token for WCAG AA contrast in both modes.
+
+**Why achromatic primary (not blue accent):** Blue carries data meaning in our interface — it signals "thriving" health. Using it for buttons and links would create ambiguity. The near-black primary keeps interactive elements visible through weight and shape, not color.
+
+**Why GitHub's dark palette:** Our users live on GitHub. The subtle cool blue tint (hue 264) creates recognition without decoration — dark mode should feel like home, not like a generic template.
 
 ### 6.2 Typography
 
@@ -627,20 +635,18 @@ Colors carry semantic meaning. We use color sparingly — only where it communic
 |---------|------|--------|------|-----|
 | Page title | 20px / 1.25rem | 600 | Sans | Not a hero banner — it's a tool, not a landing page |
 | Parent repo name | 18px / 1.125rem | 600 | Sans | The "subject" of the page |
-| Table header | 12px / 0.75rem | 600 | Sans, uppercase tracking | Compact column labels, scannable |
+| Table header | 14px / 0.875rem | 500 | Sans | Column labels — medium weight for quiet emphasis, left-aligned |
 | Table body text | 14px / 0.875rem | 400 | Sans | Fork names, descriptions |
-| Table numbers | 14px / 0.875rem | 500 | Mono | Stars, ahead/behind, scores — monospace for alignment |
-| Health score | 14px / 0.875rem | 700 | Mono | Bold for quick scanning |
+| Table numbers | 14px / 0.875rem | 500 | tabular-nums | Stars, ahead/behind, scores — tabular figures for column alignment |
+| Health score | 14px / 0.875rem | 700 | tabular-nums | Bold for quick scanning |
 | Relative time | 13px / 0.8125rem | 400 | Sans | "2 days ago" — smaller, secondary info |
 | Caption / help text | 12px / 0.75rem | 400 | Sans | Filter labels, rate limit text |
 
-**Font stacks:**
-- Sans: `Inter, ui-sans-serif, system-ui, -apple-system, sans-serif`
-- Mono: `JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace`
+**Font stack:** `system-ui` (Tailwind default) — the OS native font. Zero download cost, renders instantly, and feels native on every platform.
 
-**Why Inter:** Open source, designed for screens, excellent numeric readability, variable font for performance.
+**Why system-ui over Inter:** The 3-second promise demands instant rendering. Web font downloads add 50-100KB and a flash of unstyled text. system-ui loads in 0ms. For a data-dense tool where typography needs to be invisible (not expressive), the native font is the right choice.
 
-**Why monospace for numbers:** Ahead/behind counts, star counts, and scores must align vertically in the table. Proportional fonts cause jagged columns.
+**Why tabular-nums:** Ahead/behind counts, star counts, and scores must align vertically in the table. The CSS `font-variant-numeric: tabular-nums` property forces equal-width digits without requiring a monospace font for the entire number.
 
 ### 6.3 Spacing Scale
 
@@ -658,13 +664,16 @@ Based on 4px grid (Tailwind defaults):
 
 ### 6.4 Border Radius
 
-| Element | Radius |
-|---------|--------|
-| Cards, filter panel | 8px |
-| Buttons, inputs | 6px |
-| Pill badges (health, ahead/behind) | 9999px (full) |
-| Avatars | 9999px (circle) |
-| Table | 8px (outer only) |
+Base: `--radius: 0.625rem` (10px). Scale computed via `calc()`:
+
+| Element | Token | Value |
+|---------|-------|-------|
+| Inputs, small buttons | `--radius-sm` | 6px |
+| Buttons | `--radius-md` | 8px |
+| Cards, filter panel | `--radius-lg` | 10px |
+| Modals, large cards | `--radius-xl` | 14px |
+| Pill badges (health, ahead/behind) | `rounded-full` | 9999px |
+| Avatars | `rounded-full` | 9999px (circle) |
 
 ---
 

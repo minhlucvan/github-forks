@@ -3,8 +3,8 @@
 ## Direction
 
 **Personality:** Precision & Density
-**Foundation:** Cool neutral (achromatic oklch)
-**Depth:** Subtle shadows + borders (shadow-sm on cards, border-based separation)
+**Foundation:** Achromatic light, GitHub-inspired cool neutral dark
+**Depth:** shadow-sm + border (light), surface lightness shifts (dark)
 
 ## Intent
 
@@ -14,6 +14,10 @@
 
 **Feel:** Calm confidence. Restrained color palette. Whitespace is a feature. Color only where it carries meaning. Dense enough for power users scanning 2,000+ forks, but not cluttered.
 
+## Signature
+
+**GitHub-native dark mode.** The dark palette uses GitHub's own color system (#0d1117, #161b22, #1c2128, #21262d) with a subtle cool blue tint (hue 264, chroma 0.005–0.008). This creates instant recognition — our users live on GitHub. The dark mode feels like home, not like a generic template.
+
 ## Tokens
 
 ### Spacing
@@ -21,33 +25,55 @@ Base: 4px (Tailwind default)
 Scale: 4, 8, 12, 16, 24, 32, 48, 64 (via Tailwind spacing utilities)
 
 ### Colors
-Color model: oklch
+Color model: oklch — perceptually uniform lightness across hues.
 
-```
---background: oklch(1 0 0)              /* pure white canvas */
---foreground: oklch(0.145 0 0)          /* near-black text */
---card: oklch(1 0 0)                    /* same as background */
---card-foreground: oklch(0.145 0 0)
---primary: oklch(0.205 0 0)            /* near-black for primary actions */
---primary-foreground: oklch(0.985 0 0)
---secondary: oklch(0.97 0 0)           /* barely-off-white */
---muted-foreground: oklch(0.556 0 0)   /* medium gray for metadata */
---border: oklch(0.922 0 0)             /* very light gray borders */
---destructive: oklch(0.577 0.245 27.325)
-```
+#### Surface Elevation
 
-Domain-specific semantic colors:
-```
---ahead: oklch(0.65 0.19 160)          /* green — commits ahead */
---behind: oklch(0.70 0.15 65)          /* amber — commits behind */
---score-thriving: oklch(0.62 0.19 255) /* blue — top health */
---score-active: oklch(0.65 0.19 160)   /* green — active */
---score-moderate: oklch(0.70 0.15 65)  /* amber — moderate */
---score-low: oklch(0.65 0.20 35)       /* orange — low */
---score-inactive: oklch(0.55 0 0)      /* gray — dead */
-```
+**Light mode:** All surfaces are white. Hierarchy from border + shadow-sm.
+**Dark mode:** Each level is +0.04 lightness in the GitHub cool blue-gray.
 
-Dark mode inverts lightness; borders use alpha transparency (`oklch(1 0 0 / 10%)`).
+| Level | Purpose | Light | Dark |
+|-------|---------|-------|------|
+| L0 Canvas | Page background | `oklch(1 0 0)` | `oklch(0.13 0.005 264)` |
+| L1 Card | Raised surface | `oklch(1 0 0)` | `oklch(0.17 0.006 264)` |
+| L2 Popover | Dropdown/popover | `oklch(1 0 0)` | `oklch(0.20 0.006 264)` |
+
+#### Text Hierarchy
+
+| Level | Purpose | Light | Dark |
+|-------|---------|-------|------|
+| Primary | Default text | `oklch(0.145 0 0)` | `oklch(0.87 0.008 264)` |
+| Secondary | Actions, emphasis | `oklch(0.205 0 0)` | same as primary |
+| Muted | Metadata, timestamps | `oklch(0.556 0 0)` | `oklch(0.64 0.008 264)` |
+
+#### Boundaries
+
+| Token | Purpose | Light | Dark |
+|-------|---------|-------|------|
+| `--border` | Standard separation | `oklch(0.922 0 0)` | `oklch(1 0 0 / 10%)` |
+| `--input` | Control borders | `oklch(0.922 0 0)` | `oklch(1 0 0 / 15%)` |
+| `--ring` | Focus ring | `oklch(0.708 0 0)` | `oklch(0.50 0.008 264)` |
+
+Alpha borders in dark mode blend naturally with any surface elevation.
+
+#### Domain-Specific Semantic Colors
+
+Fork divergence:
+| Token | Meaning | Light | Dark |
+|-------|---------|-------|------|
+| `--ahead` | Commits ahead (green) | `oklch(0.65 0.19 160)` | `oklch(0.65 0.17 155)` |
+| `--behind` | Commits behind (amber) | `oklch(0.70 0.15 65)` | `oklch(0.65 0.13 60)` |
+
+Health score tiers (with per-tier foreground for WCAG AA contrast):
+| Tier | Light bg | Light fg | Dark bg | Dark fg |
+|------|----------|----------|---------|---------|
+| Thriving (blue) | `oklch(0.52 0.19 255)` | white | `oklch(0.60 0.17 260)` | near-white |
+| Active (green) | `oklch(0.55 0.17 160)` | white | `oklch(0.62 0.15 155)` | near-white |
+| Moderate (amber) | `oklch(0.70 0.15 65)` | dark | `oklch(0.62 0.13 60)` | near-white |
+| Low (orange) | `oklch(0.58 0.20 35)` | white | `oklch(0.62 0.17 40)` | near-white |
+| Inactive (gray) | `oklch(0.55 0 0)` | white | `oklch(0.40 0 0)` | light gray |
+
+Dark mode scores are slightly desaturated — saturated colors feel harsher on dark backgrounds.
 
 ### Radius
 ```
@@ -59,9 +85,15 @@ Dark mode inverts lightness; borders use alpha transparency (`oklch(1 0 0 / 10%)
 ```
 
 ### Typography
-Font: system-ui (Tailwind default — fast, native)
+Font: system-ui (Tailwind default — fast, native, invisible)
 Text hierarchy via shadcn tokens: foreground → secondary-foreground → muted-foreground
 Weight: normal (400), medium (500), semibold (600)
+Numeric data: tabular-nums for column alignment
+
+### Depth Strategy
+
+**Light mode:** border + shadow-sm on cards, shadow-md on popovers.
+**Dark mode:** surface lightness elevation. Shadows are invisible on dark backgrounds — don't use them. Borders at `oklch(1 0 0 / 10%)` define edges without harshness.
 
 ## Patterns
 
@@ -76,10 +108,21 @@ Weight: normal (400), medium (500), semibold (600)
 ### Card
 - Surface: bg-card text-card-foreground
 - Border: 1px solid (via `border` class)
-- Shadow: shadow-sm
+- Shadow: shadow-sm (light mode only)
 - Radius: rounded-xl
 - Padding: py-6, content px-6
 - Compound: Card > CardHeader > CardTitle + CardDescription + CardAction > CardContent > CardFooter
+
+### Badge (CVA variants)
+Domain variants use semantic foreground tokens (not hard-coded text-white):
+- `ahead`: bg-ahead text-ahead-foreground
+- `behind`: bg-behind text-behind-foreground
+- `identical`: bg-muted text-muted-foreground
+- `thriving`: bg-score-thriving text-score-thriving-foreground
+- `active`: bg-score-active text-score-active-foreground
+- `moderate`: bg-score-moderate text-score-moderate-foreground
+- `low`: bg-score-low text-score-low-foreground
+- `inactive`: bg-score-inactive text-score-inactive-foreground
 
 ### Data Display
 - Ahead/behind badges: most prominent data per row — bigger than stars, bolder than dates
@@ -98,8 +141,12 @@ Weight: normal (400), medium (500), semibold (600)
 | Decision | Rationale | Date |
 |----------|-----------|------|
 | oklch color model | Perceptually uniform — consistent lightness across hues for health score tiers | 2026-02-12 |
-| Achromatic neutrals | Calm confidence — color reserved for meaning (ahead/behind/health) | 2026-02-12 |
+| Achromatic light mode | Calm confidence — color reserved for meaning (ahead/behind/health) | 2026-02-12 |
+| GitHub-inspired dark (#0d1117) | Users live on GitHub — dark mode should feel like home, not a template | 2026-02-12 |
+| Hue 264, chroma 0.005–0.008 | Cool blue barely-tint. Recognition without decoration | 2026-02-12 |
+| Surface elevation via lightness | Dark mode shadows are invisible — use +0.04L steps instead | 2026-02-12 |
+| Alpha borders in dark mode | `oklch(1 0 0 / 10%)` blends with any surface level naturally | 2026-02-12 |
+| Per-tier score foregrounds | WCAG AA contrast on every health badge, adapts per mode | 2026-02-12 |
+| Score desaturation in dark mode | Saturated colors feel harsh on dark backgrounds — pull chroma back ~15% | 2026-02-12 |
 | shadow-sm + border depth | Dense data tool — subtle lift without visual weight | 2026-02-12 |
-| Domain-specific tokens (ahead, behind, score-*) | Fork health is the core data — deserves first-class color tokens | 2026-02-12 |
-| Progressive disclosure (3 layers) | Three user segments with different depth needs | 2026-02-12 |
 | shadcn/ui + Tailwind v4 + Radix | Accessible primitives, consistent tokens, fast iteration | 2026-02-12 |

@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_PAGE_SIZE } from "@/lib/constants"
 
 export interface UrlState {
@@ -10,41 +10,41 @@ export interface UrlState {
   perPage: number
 }
 
+function readFromUrl(): UrlState {
+  const params = new URLSearchParams(window.location.search)
+  return {
+    repo: params.get("repo") ?? "",
+    sort: params.get("sort") ?? DEFAULT_SORT,
+    order: params.get("order") ?? DEFAULT_ORDER,
+    filter: params.get("filter") ?? "",
+    page: Number(params.get("page") ?? 1),
+    perPage: Number(params.get("per_page") ?? DEFAULT_PAGE_SIZE),
+  }
+}
+
+function writeToUrl(state: UrlState) {
+  const params = new URLSearchParams()
+
+  if (state.repo) params.set("repo", state.repo)
+  if (state.sort !== DEFAULT_SORT) params.set("sort", state.sort)
+  if (state.order !== DEFAULT_ORDER) params.set("order", state.order)
+  if (state.filter) params.set("filter", state.filter)
+  if (state.page > 1) params.set("page", String(state.page))
+  if (state.perPage !== DEFAULT_PAGE_SIZE) params.set("per_page", String(state.perPage))
+
+  const qs = params.toString()
+  window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname)
+}
+
 export function useUrlState() {
-  const state = useMemo<UrlState>(() => {
-    const params = new URLSearchParams(window.location.search)
-    return {
-      repo: params.get("repo") ?? "",
-      sort: params.get("sort") ?? DEFAULT_SORT,
-      order: params.get("order") ?? DEFAULT_ORDER,
-      filter: params.get("filter") ?? "",
-      page: Number(params.get("page") ?? 1),
-      perPage: Number(params.get("per_page") ?? DEFAULT_PAGE_SIZE),
-    }
-  }, [])
+  const [state, setState] = useState<UrlState>(readFromUrl)
 
   const update = useCallback((changes: Partial<UrlState>) => {
-    const params = new URLSearchParams(window.location.search)
-    const current: UrlState = {
-      repo: params.get("repo") ?? "",
-      sort: params.get("sort") ?? DEFAULT_SORT,
-      order: params.get("order") ?? DEFAULT_ORDER,
-      filter: params.get("filter") ?? "",
-      page: Number(params.get("page") ?? 1),
-      perPage: Number(params.get("per_page") ?? DEFAULT_PAGE_SIZE),
-    }
-
-    const next = { ...current, ...changes }
-    const nextParams = new URLSearchParams()
-
-    if (next.repo) nextParams.set("repo", next.repo)
-    if (next.sort !== DEFAULT_SORT) nextParams.set("sort", next.sort)
-    if (next.order !== DEFAULT_ORDER) nextParams.set("order", next.order)
-    if (next.filter) nextParams.set("filter", next.filter)
-    if (next.page > 1) nextParams.set("page", String(next.page))
-    if (next.perPage !== DEFAULT_PAGE_SIZE) nextParams.set("per_page", String(next.perPage))
-
-    window.history.replaceState(null, "", `?${nextParams}`)
+    setState((prev) => {
+      const next = { ...prev, ...changes }
+      writeToUrl(next)
+      return next
+    })
   }, [])
 
   return { state, update }
