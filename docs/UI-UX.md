@@ -895,3 +895,284 @@ All animations respect `prefers-reduced-motion: reduce` — if enabled, use inst
 | **Sidebar navigation** | There's only one page. A sidebar implies multi-page app complexity that doesn't exist | Single-purpose tool. One search bar. One table. No navigation needed |
 | **Color-inverted dark mode** | Issue #79: "looks so ugly." Inversion breaks images, creates unreadable contrast, and feels amateur | Build proper dark palette with GitHub's color tokens |
 | **Show all columns by default** | Data overload. The Refugee doesn't need Size, Branch, Open Issues on first view | Progressive depth: show what matters first, reveal more on demand |
+
+---
+
+## Appendix A: Visual Redesign Proposal
+
+> Make Active Forks **screenshot-attractive** and immediately click-worthy while keeping its developer-focused density.
+
+The current UI is functional but visually neutral — it looks like a default shadcn template. In screenshots (README, tweets, Product Hunt), it doesn't grab attention or communicate its value. The goal is to make the product screenshot-attractive and immediately click-worthy while keeping its developer-focused density.
+
+### A.1 Design Diagnosis — What Makes It Boring
+
+- **Achromatic sameness** — Light mode is pure white/gray, no accent, no personality
+- **Text-only identity** — Fork owners are plain text links; no avatars, no visual identity
+- **Score understatement** — Health score (the #1 feature) is a tiny colored pill with a number
+- **Microscopic sparklines** — 80x20px activity charts are barely visible
+- **Generic landing** — Small fork icon + text doesn't sell the product
+- **Flat repo card** — No avatar, no topics, stats are a flat text row
+- **Uniform table rows** — Every row looks identical until you read the badges
+- **No motion** — Zero microinteractions, transitions, or loading delight
+- **No summary visualization** — No at-a-glance distribution of fork health
+
+### A.2 Design Principles (for this redesign)
+
+- **Screenshot-first**: Every screen should look good in a 1200x630 OG image
+- **Data IS the decoration**: Make the data visually expressive instead of adding decorative elements
+- **Progressive density**: Landing = spacious & inviting; Results = dense & powerful
+- **One accent, not zero**: Add a single brand accent color to break the achromatic flatness
+- **Motion with purpose**: Animate to communicate state changes, not for show
+
+### A.3 Proposals
+
+#### A.3.1 — Hero Landing State
+
+**Problem:** Current landing is a small fork icon, a title, and an example. No visual hook.
+
+**Proposal:**
+
+- Large gradient headline: "Find the **best** fork" with accent gradient on "best"
+- Subtitle with value prop in one line
+- Oversized search input (not small — it's the CTA)
+- 3-4 popular repo quick-picks as clickable chips below search (e.g., `facebook/react`, `tensorflow/tensorflow`)
+- Subtle animated background: faint grid or dot pattern with gentle drift
+- Trust signal: "Analyzes ahead/behind commits, health scores & activity"
+
+**Screenshot impact:** Immediately clear what the tool does, visually premium, the search bar is the hero.
+
+#### A.3.2 — Owner Avatars in Fork Table
+
+**Problem:** Fork names are plain text. In screenshots, the table looks like a spreadsheet.
+
+**Proposal:**
+
+- Add 24px rounded GitHub avatar next to each fork owner name
+- `https://github.com/{owner}.png?size=48` (no extra API call)
+- Visual identity makes rows scannable at a glance
+- Like GitHub's own contributor lists
+
+**Screenshot impact:** Table immediately looks like a GitHub-native product. Avatars add color variety and human presence.
+
+#### A.3.3 — Health Score Visual Upgrade
+
+**Problem:** The score — the app's core value — is a small number in a colored pill. It doesn't convey magnitude.
+
+**Proposal:**
+
+- Replace flat badge with a **mini ring/donut indicator** (24x24 SVG)
+- Ring fills proportionally (82/100 = 82% arc)
+- Color matches tier (blue/green/amber/red/gray)
+- Score number sits right of the ring
+- Tier label as secondary text (e.g., "thriving")
+- Tooltip breakdown stays
+
+**Screenshot impact:** The score column becomes the visual anchor of the table. Eye is drawn to colorful rings. Instantly communicates "this fork is 82% healthy."
+
+#### A.3.4 — Enhanced Repo Card
+
+**Problem:** Flat card, text-only stats, no visual hierarchy.
+
+**Proposal:**
+
+- Owner avatar (40px) left of the repo title
+- Thin accent top-border (gradient: ahead-green → score-thriving-blue) to break card flatness
+- Topics as small outlined chips/tags (max 5)
+- Stats get mini icon badges instead of inline text
+- Description gets slightly more prominence (medium weight, not just muted)
+
+**Screenshot impact:** Card looks intentional and branded, not generic.
+
+#### A.3.5 — Larger, Interactive Sparklines
+
+**Problem:** 80x20px sparklines are too small to convey information in screenshots.
+
+**Proposal:**
+
+- Expand to ~120x32px
+- Gradient fill (ahead color, 5% → 20% opacity bottom to top)
+- Rounded line caps already present, keep
+- Hover shows tooltip: "Week of Jan 6: 14 commits"
+- Zero-activity weeks show as flat baseline (not missing)
+
+**Screenshot impact:** Activity column becomes a visible, colorful feature instead of a barely-there accent.
+
+#### A.3.6 — Fork Health Summary Bar
+
+**Problem:** No at-a-glance distribution view. User has to scan the table to understand the landscape.
+
+**Proposal:**
+
+- Horizontal stacked bar above the table (like GitHub's language bar)
+- Segments colored by health tier, width proportional to count
+- Labels below: "3 thriving · 12 active · 8 moderate · 24 low · 53 inactive"
+- Clickable segments filter the table to that tier
+
+**Screenshot impact:** Adds a colorful visualization that immediately tells the story: "most forks are dead, but 3 are thriving." This is the #1 screenshot feature.
+
+#### A.3.7 — Table Row Hover & Focus
+
+**Problem:** Rows have minimal hover feedback. No visual hierarchy between good and bad forks.
+
+**Proposal:**
+
+- Hover: subtle left border accent (2px, tier color) + slight background tint
+- Top 3 rows (by score) get a faint tier-colored left border permanently (not just hover)
+- Row click opens expandable detail panel with: full description, topics, larger sparkline, comparison details
+
+**Screenshot impact:** The top forks visually stand out. The table feels interactive, not static.
+
+#### A.3.8 — Header & Branding
+
+**Problem:** "Active Forks" in plain semibold. No visual identity.
+
+**Proposal:**
+
+- Small fork icon (16px) + "Active Forks" with the word "Active" in the brand accent color
+- Subtle tagline visible on landing: "Find the best fork of any GitHub repo"
+- When viewing results: breadcrumb-style `Active Forks → facebook/react`
+- Keep it compact — the header shouldn't dominate
+
+**Screenshot impact:** Branded identity without being heavy. Breadcrumb gives context in screenshots.
+
+#### A.3.9 — Brand Accent Color
+
+**Problem:** Fully achromatic = no personality. Every shadcn app looks the same.
+
+**Proposal:**
+
+- Introduce one accent: a saturated blue-violet (hue ~260, fits the dark mode hue 264)
+- Use for: interactive elements, the "Active" brand word, focus rings, link hovers
+- Light mode: `oklch(0.55 0.20 260)` — vibrant but not neon
+- Dark mode: `oklch(0.70 0.18 260)` — lifted for dark backgrounds
+- Keep domain colors (ahead/behind/tiers) unchanged — accent is for UI chrome only
+
+**Screenshot impact:** The app has a recognizable color. Not bland gray, not rainbow — one confident color.
+
+#### A.3.10 — Micro-animations
+
+**Problem:** Everything appears instantly and statically. No motion = no life.
+
+**Proposal:**
+
+- **Score entrance**: Ring draws in clockwise over 400ms when data arrives (CSS `stroke-dashoffset` transition)
+- **Sparkline draw**: Line draws left-to-right over 300ms (CSS path animation)
+- **Badge pop**: Health badges scale from 0.9→1.0 with a subtle spring (50ms)
+- **Summary bar**: Segments grow from left over 500ms on first render
+- **Skeleton shimmer**: Keep existing, but add subtle pulse to score skeletons
+- All animations respect `prefers-reduced-motion`
+
+**Screenshot impact:** Animations don't show in static screenshots, but they make screen recordings and GIFs (for README/tweets) dramatically more engaging.
+
+#### A.3.11 — Card View Toggle (Future)
+
+**Problem:** Tables are great for comparison but look dense in screenshots.
+
+**Proposal:**
+
+- Toggle button in toolbar: Table view (default) | Card grid view
+- Card view: each fork as a mini card (avatar, name, score ring, sparkline, ahead/behind)
+- 3 columns on desktop, 1 on mobile
+- Great for browsing, less great for comparison
+
+**Screenshot impact:** Card view is more photogenic for marketing screenshots. Table stays default for power users.
+
+### A.4 Priority & Effort Matrix
+
+| #      | Proposal            | Screenshot Impact                     | Effort | Priority |
+| ------ | ------------------- | ------------------------------------- | ------ | -------- |
+| A.3.6  | Health Summary Bar  | **Highest** — the hero visual         | Medium | P0       |
+| A.3.2  | Owner Avatars       | **High** — instant visual richness    | Low    | P0       |
+| A.3.3  | Score Ring          | **High** — transforms the key column  | Medium | P0       |
+| A.3.1  | Hero Landing        | **High** — first impression           | Medium | P1       |
+| A.3.5  | Larger Sparklines   | **Medium** — adds color density       | Low    | P1       |
+| A.3.9  | Brand Accent Color  | **Medium** — personality shift        | Low    | P1       |
+| A.3.4  | Enhanced Repo Card  | **Medium** — better context card      | Low    | P1       |
+| A.3.8  | Header Branding     | **Low-Medium** — subtle but needed    | Low    | P2       |
+| A.3.7  | Row Hover/Focus     | **Low** — only visible in interaction | Low    | P2       |
+| A.3.10 | Micro-animations    | **Low** (static), **High** (GIFs)     | Medium | P2       |
+| A.3.11 | Card View Toggle    | **High** — but scope is large         | High   | P3       |
+
+### A.5 Visual Reference (ASCII Wireframes)
+
+#### Current Landing
+
+```
+┌──────────────────────────────────────────────┐
+│ Active Forks              [rate] [moon]       │
+├──────────────────────────────────────────────┤
+│  [search input__________________] [clock]    │
+│                                              │
+│              (small fork icon)               │
+│         Find the most active fork            │
+│      Paste a URL or type owner/repo          │
+│         e.g. facebook/react                  │
+│                                              │
+└──────────────────────────────────────────────┘
+```
+
+#### Proposed Landing
+
+```
+┌──────────────────────────────────────────────┐
+│ (fork) Active Forks            [rate] [moon] │
+├──────────────────────────────────────────────┤
+│                                              │
+│        Find the *best* fork                  │
+│    of any GitHub repository                  │
+│                                              │
+│  ┌──────────────────────────────────┐        │
+│  │ (search) Paste URL or owner/repo │        │
+│  └──────────────────────────────────┘        │
+│                                              │
+│  [facebook/react] [torvalds/linux] [+more]   │
+│                                              │
+│  * Ahead/behind commits  * Health scores     │
+│  * Activity sparklines   * Smart ranking     │
+│                                              │
+└──────────────────────────────────────────────┘
+```
+
+#### Current Results Table Row
+
+```
+| owner-name (link) | 82 | +24 -2  | 1,234 | 45 | ~~~~ | 2d ago |
+```
+
+#### Proposed Results Table Row
+
+```
+| (tier)(avatar) owner-name (link) | (ring) 82 thriving | +24 -2 | 1,234 | 45 | (larger)~~~~ | 2d ago |
+```
+
+#### Proposed Summary Bar (above table)
+
+```
+┌──────────────────────────────────────────────┐
+│ [====][----------][--------][================]│
+│ 3 thriving · 12 active · 8 moderate · 77 low │
+└──────────────────────────────────────────────┘
+```
+
+### A.6 Files to Modify (Implementation Phase)
+
+| File                                    | Changes                                      |
+| --------------------------------------- | -------------------------------------------- |
+| `src/index.css`                         | Add accent color tokens, summary bar tokens  |
+| `src/components/empty-state.tsx`        | Hero landing redesign                        |
+| `src/components/fork-columns.tsx`       | Avatar in name column, score ring            |
+| `src/components/health-score-badge.tsx` | Ring indicator SVG                           |
+| `src/components/activity-sparkline.tsx` | Larger size, gradient fill                   |
+| `src/components/repo-card.tsx`          | Avatar, topics, accent border                |
+| `src/components/fork-table.tsx`         | Summary bar, row hover                       |
+| `src/components/fork-toolbar.tsx`       | Summary bar integration                      |
+| `src/App.tsx`                           | Header branding, breadcrumb                  |
+| `src/components/health-summary-bar.tsx` | New component                                |
+
+### A.7 Verification
+
+- Visual inspection in browser (light + dark mode)
+- Screenshots at 1200x630 for OG image comparison
+- Check `prefers-reduced-motion` disables all animations
+- Verify no layout shift from avatar loading (explicit width/height)
+- Lighthouse accessibility audit stays green

@@ -21,6 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ForkToolbar, defaultFilters, type FilterState } from "@/components/fork-toolbar"
 import { forkColumns, type ForkRowData } from "@/components/fork-columns"
 import { EmptyState } from "@/components/empty-state"
+import { HealthSummaryBar } from "@/components/health-summary-bar"
 import { calculateForkScore } from "@/lib/fork-score"
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants"
 import type { GitHubFork, GitHubComparison, GitHubCommitActivity } from "@/lib/github-types"
@@ -66,7 +67,22 @@ export function ForkTable({
 
   // Apply local filters
   const filteredData = useMemo(() => {
+    const sixMonthsAgo = Date.now() - 6 * 30 * 24 * 60 * 60 * 1000
+    const oneYearAgo = Date.now() - 365 * 24 * 60 * 60 * 1000
+
     return rowData.filter((row) => {
+      // Quick filters
+      if (filters.quickFilter === "meaningful") {
+        const pushedAt = new Date(row.fork.pushed_at).getTime()
+        const ahead = row.comparison?.ahead_by ?? 0
+        if (ahead <= 0 || pushedAt < oneYearAgo || row.fork.stargazers_count <= 0) return false
+      }
+      if (filters.quickFilter === "active") {
+        const pushedAt = new Date(row.fork.pushed_at).getTime()
+        if (pushedAt < sixMonthsAgo) return false
+      }
+
+      // Manual filters
       if (filters.search && !row.fork.owner.login.toLowerCase().includes(filters.search.toLowerCase())) {
         return false
       }
@@ -122,6 +138,17 @@ export function ForkTable({
 
   return (
     <div className="space-y-3">
+      <HealthSummaryBar
+        scores={rowData.map((r) => r.score)}
+        activeTier={filters.healthTier}
+        onTierClick={(tier) =>
+          setFilters({
+            ...filters,
+            healthTier: filters.healthTier === tier ? "" : tier,
+          })
+        }
+      />
+
       <ForkToolbar
         forks={filteredData.map((r) => r.fork)}
         repoName={repoName}
@@ -152,15 +179,31 @@ export function ForkTable({
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+                {table.getRowModel().rows.map((row, rowIndex) => {
+                  const tier = row.original.score.tier
+                  const isTop3 = rowIndex < 3
+
+                  const tierBorderClass = isTop3
+                    ? tier === "thriving" ? "border-l-2 border-l-score-thriving"
+                    : tier === "active" ? "border-l-2 border-l-score-active"
+                    : tier === "moderate" ? "border-l-2 border-l-score-moderate"
+                    : tier === "low" ? "border-l-2 border-l-score-low"
+                    : "border-l-2 border-l-score-inactive"
+                    : ""
+
+                  return (
+                    <TableRow
+                      key={row.id}
+                      className={`animate-row-fade-in transition-colors ${tierBorderClass}`}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>

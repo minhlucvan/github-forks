@@ -84,7 +84,7 @@ export function RateLimitIndicator({ token, onTokenChange }: RateLimitIndicatorP
               Save
             </Button>
           </div>
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             Generate a token at GitHub Settings &rarr; Developer settings &rarr; Personal access tokens. No scopes needed for public repos.
           </p>
         </div>

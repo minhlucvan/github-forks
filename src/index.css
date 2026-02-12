@@ -31,6 +31,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
   /* Boundaries */
   --color-border: var(--border);
@@ -53,6 +54,10 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Brand accent */
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-foreground: var(--brand-accent-foreground);
 
   /* Fork divergence signals */
   --color-ahead: var(--ahead);
@@ -103,6 +108,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
 
   /* ── Boundaries ── */
   --border: oklch(0.922 0 0);
@@ -125,6 +131,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* ── Brand accent ──
+     Blue-violet for interactive chrome: focus rings, link hovers, the "Active" brand word.
+     Keeps domain colors (ahead/behind/tiers) unchanged — accent is for UI only. */
+  --brand-accent: oklch(0.55 0.20 260);
+  --brand-accent-foreground: oklch(1 0 0);
 
   /* ── Fork divergence signals ──
      Green for "real work happened," amber for "drifting from parent." */
@@ -176,6 +188,7 @@
   --accent: oklch(0.22 0.006 264);
   --accent-foreground: oklch(0.87 0.008 264);
   --destructive: oklch(0.65 0.20 25);
+  --destructive-foreground: oklch(0.98 0 0);
 
   /* ── Boundaries ──
      Alpha borders blend with any surface level. */
@@ -199,6 +212,10 @@
   --sidebar-accent-foreground: oklch(0.87 0.008 264);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.50 0.008 264);
+
+  /* ── Brand accent ── */
+  --brand-accent: oklch(0.70 0.18 260);
+  --brand-accent-foreground: oklch(0.13 0.005 264);
 
   /* ── Fork divergence signals ── */
   --ahead: oklch(0.65 0.17 155);
@@ -227,5 +244,52 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+   All respect prefers-reduced-motion.
+   ═══════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  /* Sparkline draw animation */
+  @keyframes sparkline-draw {
+    from { stroke-dashoffset: var(--sparkline-length, 300); }
+    to { stroke-dashoffset: 0; }
+  }
+
+  .animate-sparkline-draw {
+    animation: sparkline-draw 400ms ease-out forwards;
+  }
+
+  /* Summary bar segment grow */
+  @keyframes bar-grow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .animate-bar-grow {
+    animation: bar-grow 500ms ease-out forwards;
+    transform-origin: left;
+  }
+
+  /* Table row fade-in */
+  @keyframes row-fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-row-fade-in {
+    animation: row-fade-in 150ms ease-out;
+  }
+}
+
+/* Disable all animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -11,35 +11,40 @@ export function AheadBehindBadge({ comparison, isLoading }: AheadBehindBadgeProp
   if (isLoading) {
     return (
       <div className="flex items-center gap-1.5">
-        <Skeleton className="h-5 w-12 rounded-full" />
-        <Skeleton className="h-5 w-12 rounded-full" />
+        <Skeleton className="h-5 w-14 rounded-full" />
+        <Skeleton className="h-5 w-14 rounded-full" />
       </div>
     )
   }
 
   if (!comparison) {
-    return <span className="text-xs text-muted-foreground">-</span>
+    return <span className="text-xs text-muted-foreground">—</span>
   }
 
-  if (comparison.status === "identical") {
-    return <Badge variant="identical">identical</Badge>
+  if (comparison.status === "identical" || (comparison.ahead_by === 0 && comparison.behind_by === 0)) {
+    return (
+      <Badge variant="identical">
+        <span className="text-xs">·</span> identical
+      </Badge>
+    )
   }
 
   return (
     <div className="flex items-center gap-1.5">
-      {comparison.ahead_by > 0 && (
-        <Badge variant="ahead" className="tabular-nums">
-          +{comparison.ahead_by}
+      {comparison.ahead_by > 0 ? (
+        <Badge variant="ahead" className="tabular-nums font-semibold">
+          ↑{comparison.ahead_by}
         </Badge>
+      ) : (
+        <span className="text-xs text-muted-foreground">· even</span>
       )}
-      {comparison.behind_by > 0 && (
+      {comparison.behind_by > 0 ? (
         <Badge variant="behind" className="tabular-nums">
-          -{comparison.behind_by}
+          ↓{comparison.behind_by}
         </Badge>
-      )}
-      {comparison.ahead_by === 0 && comparison.behind_by === 0 && (
-        <Badge variant="identical">identical</Badge>
-      )}
+      ) : comparison.ahead_by > 0 ? (
+        <span className="text-xs text-muted-foreground">· even</span>
+      ) : null}
     </div>
   )
 }

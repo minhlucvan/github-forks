@@ -15,10 +15,16 @@ interface RepoCardProps {
 export function RepoCard({ repo, isLoading, forkCount }: RepoCardProps) {
   if (isLoading) {
     return (
-      <Card>
+      <Card className="overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-ahead to-score-thriving" />
         <CardHeader>
-          <Skeleton className="h-5 w-48" />
-          <Skeleton className="h-4 w-80" />
+          <div className="flex items-center gap-3">
+            <Skeleton className="size-10 rounded-full" />
+            <div className="space-y-1.5">
+              <Skeleton className="h-5 w-48" />
+              <Skeleton className="h-4 w-80" />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
@@ -34,19 +40,36 @@ export function RepoCard({ repo, isLoading, forkCount }: RepoCardProps) {
   if (!repo) return null
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
+      {/* Accent top border — gradient from ahead-green to score-thriving-blue */}
+      <div className="h-1 bg-gradient-to-r from-ahead to-score-thriving" />
+
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <span className="truncate">{repo.full_name}</span>
-          {repo.archived && (
-            <Badge variant="secondary" className="text-xs">
-              archived
-            </Badge>
-          )}
-        </CardTitle>
-        {repo.description && (
-          <CardDescription className="line-clamp-2">{repo.description}</CardDescription>
-        )}
+        <div className="flex items-start gap-3">
+          <img
+            src={`${repo.owner.avatar_url}&s=80`}
+            alt={`${repo.owner.login} avatar`}
+            width={40}
+            height={40}
+            className="size-10 rounded-full bg-muted"
+            loading="lazy"
+          />
+          <div className="min-w-0 flex-1">
+            <CardTitle className="flex items-center gap-2">
+              <span className="truncate">{repo.full_name}</span>
+              {repo.archived && (
+                <Badge variant="secondary" className="text-xs">
+                  archived
+                </Badge>
+              )}
+            </CardTitle>
+            {repo.description && (
+              <CardDescription className="mt-1 line-clamp-2 font-medium text-foreground/70">
+                {repo.description}
+              </CardDescription>
+            )}
+          </div>
+        </div>
         <CardAction>
           <Button variant="outline" size="sm" asChild>
             <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
@@ -56,6 +79,7 @@ export function RepoCard({ repo, isLoading, forkCount }: RepoCardProps) {
           </Button>
         </CardAction>
       </CardHeader>
+
       <CardContent>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
           <span className="inline-flex items-center gap-1 text-foreground">
@@ -88,6 +112,22 @@ export function RepoCard({ repo, isLoading, forkCount }: RepoCardProps) {
           )}
           <span className="text-muted-foreground">Updated {formatRelativeDate(repo.pushed_at)}</span>
         </div>
+
+        {/* Topic chips */}
+        {repo.topics && repo.topics.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {repo.topics.slice(0, 5).map((topic) => (
+              <Badge key={topic} variant="outline" className="text-xs font-normal">
+                {topic}
+              </Badge>
+            ))}
+            {repo.topics.length > 5 && (
+              <span className="inline-flex items-center text-xs text-muted-foreground">
+                +{repo.topics.length - 5} more
+              </span>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   )

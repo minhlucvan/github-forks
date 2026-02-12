@@ -16,6 +16,7 @@ import { useForks } from "@/hooks/use-forks"
 import { useGitHubToken } from "@/hooks/use-github-token"
 import { useSearchHistory } from "@/hooks/use-search-history"
 import { fetchComparison, fetchCommitActivity } from "@/lib/github"
+import { GitFork } from "lucide-react"
 import { parseGitHubUrl } from "@/lib/url-parser"
 import type { GitHubComparison, GitHubCommitActivity } from "@/lib/github-types"
 
@@ -123,7 +124,10 @@ function AppContent() {
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <h1 className="text-lg font-semibold">Active Forks</h1>
+          <h1 className="flex items-center gap-1.5 text-lg font-semibold">
+            <GitFork className="size-4 text-muted-foreground" />
+            <span className="text-brand-accent">Active</span> Forks
+          </h1>
           <div className="flex items-center gap-1">
             <RateLimitIndicator token={token} onTokenChange={setToken} />
             <ModeToggle />
@@ -166,7 +170,13 @@ function AppContent() {
             />
           </>
         ) : (
-          <EmptyState variant="landing" />
+          <EmptyState
+            variant="landing"
+            onExampleClick={(repo) => {
+              const [o, r] = repo.split("/")
+              if (o && r) handleSearch(o, r)
+            }}
+          />
         )}
       </main>
     </div>

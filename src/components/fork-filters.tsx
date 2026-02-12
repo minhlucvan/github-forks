@@ -8,6 +8,7 @@ export interface FilterState {
   language: string
   minStars: number
   healthTier: string
+  quickFilter?: "meaningful" | "active" | null
 }
 
 export const defaultFilters: FilterState = {
@@ -15,6 +16,7 @@ export const defaultFilters: FilterState = {
   language: "",
   minStars: 0,
   healthTier: "",
+  quickFilter: null,
 }
 
 interface ForkFiltersProps {

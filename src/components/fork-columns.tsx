@@ -37,6 +37,14 @@ export const forkColumns = [
       const { fork } = row.original
       return (
         <div className="flex items-center gap-2">
+          <img
+            src={`${fork.owner.avatar_url}&s=48`}
+            alt={`${fork.owner.login} avatar`}
+            width={24}
+            height={24}
+            className="size-6 rounded-full bg-muted"
+            loading="lazy"
+          />
           <a
             href={fork.html_url}
             target="_blank"
